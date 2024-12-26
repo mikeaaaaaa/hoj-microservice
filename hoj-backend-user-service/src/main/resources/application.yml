@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: hoj-backend-user-service
+  # 默认 dev 环境
+  profiles:
+    active: dev
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # session 配置
+  session:
+    # todo 取消注释开启分布式 session（须先配置 Redis）
+    store-type: redis
+    # 30 天过期
+    timeout: 2592000
+  # 数据库配置
+  # todo 需替换配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.123.81:33306/hoj
+    username: root
+    password: 123456
+    # Redis 配置
+    # todo 需替换配置，然后取消注释
+  redis:
+    cluster:
+      nodes: # 配置集群中的任意一个或多个节点即可
+        - 192.168.123.81:6371
+        - 192.168.123.81:6372
+        - 192.168.123.81:6373
+        - 192.168.123.81:6374
+        - 192.168.123.81:6375
+        - 192.168.123.81:6376
+      max-redirects: 6 # 客户端重定向的最大次数
+    timeout: 5000ms
+    password: 123456
+  # 文件上传
+  servlet:
+    multipart:
+      # 大小限制
+      max-file-size: 10MB
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.123.81:8848
+knife4j:
+  enable: true
+server:
+  address: 0.0.0.0
+  port: 8102
+  servlet:
+    context-path: /api/user
+    # cookie 30 天过期
+    session:
+      cookie:
+        max-age: 2592000
+        path: /api
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
+      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
+      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）

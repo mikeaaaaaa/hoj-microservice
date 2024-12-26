@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: hoj-backend-gateway
+  main:
+    web-application-type: reactive # 使用响应式编程
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.123.81:33306/hoj
+    username: root
+    password: 123456
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.123.81:8848
+    gateway:
+      routes:
+        - id: hoj-backend-user-service
+          uri: lb://hoj-backend-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: hoj-backend-question-service
+          uri: lb://hoj-backend-question-service
+          predicates:
+              - Path=/api/question/**
+        - id: hoj-backend-judge-service
+          uri: lb://hoj-backend-judge-service
+          predicates:
+              - Path=/api/judge/**
+
+knife4j:
+  # 聚合swagger文档
+  gateway:
+    enabled: true
+    strategy: discover
+    discover:
+      enabled: true
+      version: swagger2
+
+server:
+  address: 0.0.0.0
+  port: 8101
+
